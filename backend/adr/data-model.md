@@ -1,9 +1,9 @@
 # Data Model
-The application stores data about the notes: its content, date of creation and possibly the user who created the note.
+The application stores data about the notes: its content, date of expiration and the user who created the note.
 
 ## Models
 ### Notes
-* id automatic
+* id String
 * createdBy String
-* creationDate Date
-* content String
+* expirationDate Number
+* noteContent String

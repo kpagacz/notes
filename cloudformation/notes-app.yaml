@@ -1,6 +1,5 @@
-
 AWSTemplateFormatVersion: "2010-09-09"
-Description: "Provisions resources needed to run the notes application: frontend, authentication services, backend and the database"
+Description: "Provisions resources needed to run the notes application: frontend, authentication services, backend and data storage"
 
 Parameters:
   Repository:
@@ -13,27 +12,27 @@ Parameters:
     NoEcho: true
 
 Resources:
-# Amplify setup
+  # Amplify setup
   AmplifyRole:
-      Type: AWS::IAM::Role
-      Properties:
-        AssumeRolePolicyDocument:
-          Version: 2012-10-17
-          Statement:
-            - Effect: Allow
-              Principal:
-                Service:
-                  - amplify.amazonaws.com
-              Action:
-                - sts:AssumeRole
-        Policies:
-          - PolicyName: Amplify
-            PolicyDocument:
-              Version: 2012-10-17
-              Statement:
-                - Effect: Allow
-                  Action: "amplify:*"
-                  Resource: "*"
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - amplify.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: Amplify
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: "amplify:*"
+                Resource: "*"
 
   NotesAmplify:
     Type: AWS::Amplify::App
@@ -77,30 +76,20 @@ Resources:
       Description: The main production branch
       EnableAutoBuild: true
 
-# DynamoDB setup
+  # DynamoDB setup
   NotesDynamoTable:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: Notes
       AttributeDefinitions:
-        -
-          AttributeName: "id"
+        - AttributeName: "id"
           AttributeType: "S"
-        -
-          AttributeName: "createdBy"
+        - AttributeName: "createdBy"
           AttributeType: "S"
-        -
-          AttributeName: "noteContent"
-          AttributeType: "S"
-        -
-          AttributeName: "expirationDate"
-          AttributeType: "N"
       KeySchema:
-        -
-          AttributeName: "id"
+        - AttributeName: "id"
           KeyType: "HASH"
-        -
-          AttributeName: "createdBy"
+        - AttributeName: "createdBy"
           KeyType: "RANGE"
       ProvisionedThroughput:
         ReadCapacityUnits: 5
@@ -108,3 +97,43 @@ Resources:
       TimeToLiveSpecification:
         AttributeName: expirationDate
         Enabled: true
+
+  # Lambdas
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - "lambda.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        - "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
+
+  PostLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: Handles the POST endpoint of the notes application
+      FunctionName: notesPostHandler
+      Handler: index.handler
+      Code:
+        ZipFile: |-
+          exports.handler = (event, context, callback) => {
+            console.log("Event registered: ", event);
+            callback(null, {
+              statusCode: 200,
+              body: JSON.stringify({
+                  msg: "success"
+              }),
+              headers: {
+                  'Access-Control-Allow-Origin': '*',
+              },
+            });
+          }
+      Role: !GetAtt LambdaRole.Arn
+      Runtime: "nodejs14.x"
