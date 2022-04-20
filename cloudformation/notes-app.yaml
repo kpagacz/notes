@@ -1,0 +1,110 @@
+
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Provisions resources needed to run the notes application: frontend, authentication services, backend and the database"
+
+Parameters:
+  Repository:
+    Type: String
+    Default: "https://github.com/kpagacz/notes"
+    Description: GitHub Repository URL
+  AccessToken:
+    Type: String
+    Description: Personal Access Token from Github
+    NoEcho: true
+
+Resources:
+# Amplify setup
+  AmplifyRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - amplify.amazonaws.com
+              Action:
+                - sts:AssumeRole
+        Policies:
+          - PolicyName: Amplify
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                - Effect: Allow
+                  Action: "amplify:*"
+                  Resource: "*"
+
+  NotesAmplify:
+    Type: AWS::Amplify::App
+    Properties:
+      Description: The notes application
+      Name: notes-application
+      Repository: !Ref Repository
+      AccessToken: !Ref AccessToken
+      AutoBranchCreationConfig:
+        AutoBranchCreationPatterns:
+          - main
+        EnableAutoBranchCreation: true
+        EnableAutoBuild: true
+        EnablePerformanceMode: false
+      BuildSpec: |-
+        version: 1
+        applications:
+          - frontend:
+              phases:
+                preBuild:
+                  commands:
+                    - npm install
+                build:
+                  commands:
+                    - npm run build
+              artifacts:
+                baseDirectory: build
+                files:
+                  - '**/*'
+              cache:
+                paths:
+                  - node_modules/**/*
+            appRoot: frontend
+      EnableBranchAutoDeletion: true
+      IAMServiceRole: !GetAtt AmplifyRole.Arn
+  MainAmplifyBranch:
+    Type: AWS::Amplify::Branch
+    Properties:
+      AppId: !GetAtt NotesAmplify.AppId
+      BranchName: main
+      Description: The main production branch
+      EnableAutoBuild: true
+
+# DynamoDB setup
+  NotesDynamoTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Notes
+      AttributeDefinitions:
+        -
+          AttributeName: "id"
+          AttributeType: "S"
+        -
+          AttributeName: "createdBy"
+          AttributeType: "S"
+        -
+          AttributeName: "noteContent"
+          AttributeType: "S"
+        -
+          AttributeName: "expirationDate"
+          AttributeType: "N"
+      KeySchema:
+        -
+          AttributeName: "id"
+          KeyType: "HASH"
+        -
+          AttributeName: "createdBy"
+          KeyType: "RANGE"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      TimeToLiveSpecification:
+        AttributeName: expirationDate
+        Enabled: true
