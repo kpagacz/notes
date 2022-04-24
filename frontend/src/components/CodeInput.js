@@ -1,12 +1,20 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const CodeInput = (props) => {
+const CodeInput = () => {
+  const navigate = useNavigate();
+
+  const onSubmitHandler = (event) => {
+    event.preventDefault();
+    navigate("/notes/" + event.target[0].value);
+  }
+
   return (
     <div>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={onSubmitHandler}>
         <label htmlFor="note-code">Note Code:</label>
         <input type="text" id="note-code" name="note-code" />
-        <input type="submit" onClick={props.onClick} />
+        <input type="submit"/>
       </form>
     </div>
   );

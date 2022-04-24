@@ -22,3 +22,8 @@ permissions.
 3. Run the build for the main branch using AWS Amplify (via CLI or the AWS Console) because Cloudformation can only provision the resource.
 
 At this point your frontend should be up and running.
+
+# Architecture
+The below picture presents an overview of the provisioned AWS architecture.
+
+[AWS architecture overview]("./aws-architecture.png)

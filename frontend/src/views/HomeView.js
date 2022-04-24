@@ -6,10 +6,6 @@ import CodeInput from "components/CodeInput";
 const HomeView = () => {
   var navigate = useNavigate();
 
-  const handleNoteCodeSubmitClick = () => {
-    console.log("Submit button clicked");
-  };
-
   const handleNewNoteClick = () => {
     console.log("New note clicked");
     navigate("/write");
@@ -17,7 +13,7 @@ const HomeView = () => {
 
   return (
     <div>
-      <CodeInput onClick={handleNoteCodeSubmitClick} />
+      <CodeInput />
       <button onClick={handleNewNoteClick}>Create a New Note</button>
     </div>
   );

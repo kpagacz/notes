@@ -5,7 +5,6 @@ const HomeButton = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    console.log("Home button clicked");
     navigate("/");
   };
   return <button onClick={handleClick}>Home</button>;
