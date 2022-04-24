@@ -1,0 +1,106 @@
+openapi: 3.1.0
+info:
+  title: Notes API
+  version: '1.0'
+  summary: The Notes application API
+  description: Services the Notes application
+  license:
+    name: MIT
+    url: 'https://en.wikipedia.org/wiki/MIT_License'
+  contact:
+    name: Konrad Pagacz
+    email: konrad.pagacz@gmail.com
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  '/notes/{id}':
+    get:
+      summary: Your GET endpoint
+      tags:
+        - notes
+      responses:
+        '200':
+          description: OK
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+              description: Allow all origins
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '404':
+          description: Not Found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+              description: Allow all origins
+      operationId: get-notes
+      description: Returns a note
+      parameters: []
+    parameters:
+      - schema:
+          type: string
+          example: exampleid
+        name: id
+        in: path
+        description: The id of a note
+        required: true
+  /notes:
+    post:
+      summary: ''
+      operationId: post-notes
+      responses:
+        '201':
+          description: Created
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+              description: Allow all origins
+      description: Creates a new note
+      tags:
+        - notes
+      requestBody:
+        $ref: '#/components/requestBodies/NotesPost'
+components:
+  schemas:
+    Note:
+      title: Note
+      type: object
+      properties:
+        id:
+          type: string
+          example: exampleid
+        noteContent:
+          type: string
+          example: This an example content of a note
+          description: The content of the note
+        createdBy:
+          type: string
+          example: author
+          description: The author of the note
+        expirationDate:
+          type: integer
+          description: The expiration date (Unix epoch date format in seconds)
+          example: 123675012345
+  parameters: {}
+  responses: {}
+  requestBodies:
+    NotesPost:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              createdBy:
+                type: string
+                description: The author of the content
+              noteContent:
+                type: string
+                description: The content of the note
+      description: The body of the post notes request.
+tags:
+  - name: notes

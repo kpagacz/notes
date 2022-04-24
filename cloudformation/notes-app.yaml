@@ -12,6 +12,15 @@ Parameters:
     NoEcho: true
 
 Resources:
+  # S3 Bucket
+  NotesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join
+        - ""
+        - - "notes-bucket-"
+          - !Ref AWS::Region
+
   # Amplify setup
   AmplifyRole:
     Type: AWS::IAM::Role
@@ -68,6 +77,7 @@ Resources:
             appRoot: frontend
       EnableBranchAutoDeletion: true
       IAMServiceRole: !GetAtt AmplifyRole.Arn
+
   MainAmplifyBranch:
     Type: AWS::Amplify::Branch
     Properties:
@@ -128,7 +138,7 @@ Resources:
             callback(null, {
               statusCode: 200,
               body: JSON.stringify({
-                  msg: "success"
+                  msg: "Post success"
               }),
               headers: {
                   'Access-Control-Allow-Origin': '*',
@@ -137,3 +147,119 @@ Resources:
           }
       Role: !GetAtt LambdaRole.Arn
       Runtime: "nodejs14.x"
+
+  GetLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: Handles the GET endpoint of the notes application
+      FunctionName: notesGetHandler
+      Handler: index.handler
+      Code:
+        ZipFile: |-
+          exports.handler = (event, context, callback) => {
+            console.log("Event registered: ", event);
+            callback(null, {
+              statusCode: 200,
+              body: JSON.stringify({
+                  msg: "Get success"
+              }),
+              headers: {
+                  'Access-Control-Allow-Origin': '*',
+              },
+            });
+          }
+      Role: !GetAtt LambdaRole.Arn
+      Runtime: "nodejs14.x"
+
+  # API Gateway
+  NotesAPIGateway:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: NotesAPI
+      Description: "The backend service of the Notes application"
+      ProtocolType: HTTP
+      CorsConfiguration:
+        AllowHeaders:
+          - "*"
+        AllowMethods:
+          - POST
+          - GET
+        AllowOrigins:
+          - "*"
+      Version: "0.1"
+
+  GetNotesLambdaInvokeAPIPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt GetLambda.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${NotesAPIGateway}/*/*/notes/{id}"
+
+  PostNotesLambdaInvokeAPIPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt PostLambda.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${NotesAPIGateway}/*/*/notes"
+
+  GetNotesLambdaIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref NotesAPIGateway
+      Description: The GET /notes AWS Lambda integration
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetLambda.Arn}/invocations"
+      IntegrationMethod: POST
+      PayloadFormatVersion: "2.0"
+
+  PostNotesLambdaIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref NotesAPIGateway
+      Description: The POST /notes AWS Lambda integration
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${PostLambda.Arn}/invocations"
+      IntegrationMethod: POST
+      PayloadFormatVersion: "2.0"
+
+  GetNotesRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref NotesAPIGateway
+      AuthorizationType: NONE
+      RouteKey: "GET /notes/{id}"
+      Target: !Join
+        - /
+        - - integrations
+          - !Ref GetNotesLambdaIntegration
+
+  PostNotesRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref NotesAPIGateway
+      AuthorizationType: NONE
+      RouteKey: "POST /notes"
+      Target: !Join
+        - /
+        - - integrations
+          - !Ref PostNotesLambdaIntegration
+
+  ProdAPIStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      StageName: production
+      Description: The production stage of the NotesAPI
+      ApiId: !Ref NotesAPIGateway
+      AutoDeploy: true
+
+  ProdDeployment:
+    Type: AWS::ApiGatewayV2::Deployment
+    DependsOn:
+      - GetNotesRoute
+      - PostNotesRoute
+    Properties:
+      Description: The production deployment
+      ApiId: !Ref NotesAPIGateway
+      StageName: production
