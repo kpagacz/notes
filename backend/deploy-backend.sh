@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # A key-value dictionary of (directory)-(AWS Lambda function name) pairs
-endpoints=("createNote" "getNote")
+endpoints=("postNote" "getNote")
 lambdaNames=("notesPostHandler" "notesGetHandler")
 
 END=${#endpoints[@]}

@@ -4,7 +4,7 @@ import notesApi from "./notesApi";
  * Requests and returns a Note object from the backend service.
  *
  * @param {String} id the id of the requested note
- * @return {Note} the requested note
+ * @return {Object} the requested note
  */
 const getNote = async (id) => {
   const response = await notesApi.get("/notes/" + id);

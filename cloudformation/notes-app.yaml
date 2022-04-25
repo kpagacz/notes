@@ -263,3 +263,8 @@ Resources:
       Description: The production deployment
       ApiId: !Ref NotesAPIGateway
       StageName: production
+
+Outputs:
+  NotesApiEndpoint:
+    Description: The default URL endpoint of the NotesAPI
+    Value: !GetAtt NotesAPIGateway.ApiEndpoint

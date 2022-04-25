@@ -20,3 +20,7 @@ In summary, to deploy the backend you need to:
 4. Authenticate to AWS using AWS CLI.
 4. Install [the `zip` package](https://linux.die.net/man/1/zip)
 5. Run the script `deploy-backend.sh` from this directory.
+
+## Ideas for further development
+* Introduce a common dependency layer with an already set up `aws.dynamoDB.documentClient` and a proper `aws` dependency instead of the
+sidestepping hack currently implemented.

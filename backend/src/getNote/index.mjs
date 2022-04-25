@@ -1,3 +1,7 @@
+// The usual import syntax for aws does not work on AWS Lambdas
+// for a non-determined reason (it should be available according to the docs).
+// The below sidesteps the issue as an alternative to introduction
+// of the aws dependency in package.json.
 import aws from "/var/runtime/node_modules/aws-sdk/lib/aws.js";
 
 aws.config.update({ region: "eu-central-1" });

@@ -1,4 +1,8 @@
 import { randomUUID } from "crypto";
+// The usual import syntax for aws does not work on AWS Lambdas
+// for a non-determined reason (it should be available according to the docs).
+// The below sidesteps the issue as an alternative to introduction
+// of the aws dependency in package.json.
 import aws from "/var/runtime/node_modules/aws-sdk/lib/aws.js";
 
 aws.config.update({ region: "eu-central-1" });
@@ -12,10 +16,10 @@ const notesTableName = "Notes";
  * @param {String} createdBy the author of the note
  * @param {String} noteContent the content of the created note
  * @param {Number} expirationTime the number of seconds from the local system time elapsed
- * to the automatic removal of the note from the table
+ * until the automatic removal of the note from the table
  * @returns the created note
  */
-const createNoteService = async (createdBy, noteContent, expirationTime) => {
+const postNoteService = async (createdBy, noteContent, expirationTime) => {
   const id = randomUUID();
   const params = {
     Item: {
@@ -28,12 +32,10 @@ const createNoteService = async (createdBy, noteContent, expirationTime) => {
   };
   await dynamoClient.put(params).promise();
   return {
-    Item: {
-      id: id,
-      createdBy: createdBy,
-      noteContent: noteContent,
-      expirationDate: Math.floor(Date.now() / 1000) + expirationTime,
-    },
+    id: id,
+    createdBy: createdBy,
+    noteContent: noteContent,
+    expirationDate: Math.floor(Date.now() / 1000) + expirationTime,
   };
 };
 
@@ -47,10 +49,11 @@ export const handler = async (event, context) => {
   };
 
   try {
-    const added = await createNoteService(
-      event.createdBy,
-      event.noteContent,
-      event.expirationTime
+    const body = JSON.parse(event.body);
+    const added = await postNoteService(
+      body.createdBy,
+      body.noteContent,
+      body.expirationTime
     );
     response.statusCode = 201;
     response.body = JSON.stringify(added);
@@ -62,5 +65,6 @@ export const handler = async (event, context) => {
     response.statusCode = 500;
   }
 
+  console.dir(response);
   return response;
 };

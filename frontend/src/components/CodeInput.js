@@ -14,7 +14,7 @@ const CodeInput = () => {
       <form onSubmit={onSubmitHandler}>
         <label htmlFor="note-code">Note Code:</label>
         <input type="text" id="note-code" name="note-code" />
-        <input type="submit"/>
+        <input type="submit" value="Discover Note"/>
       </form>
     </div>
   );
