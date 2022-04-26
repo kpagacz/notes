@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import style from "./CodeInput.module.css";
 
 const CodeInput = () => {
   const navigate = useNavigate();
@@ -7,16 +8,13 @@ const CodeInput = () => {
   const onSubmitHandler = (event) => {
     event.preventDefault();
     navigate("/notes/" + event.target[0].value);
-  }
+  };
 
   return (
-    <div>
-      <form onSubmit={onSubmitHandler}>
-        <label htmlFor="note-code">Note Code:</label>
-        <input type="text" id="note-code" name="note-code" />
-        <input type="submit" value="Discover Note"/>
-      </form>
-    </div>
+    <form onSubmit={onSubmitHandler} className={style.inputForm}>
+      <input type="text" id="note-code" name="note-code" placeholder="Input a note's secret to read it... "/>
+      <input type="submit" value="Discover the Note" />
+    </form>
   );
 };
 

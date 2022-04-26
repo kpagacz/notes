@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import HomeView from "views/HomeView";
+import HomeView from "views/homeView/HomeView";
 import NoteEditView from "views/NoteEditView";
 import NoteShowView from "views/NoteShowView";
 import Page404 from "views/Page404";

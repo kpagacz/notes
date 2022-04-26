@@ -1,0 +1,23 @@
+div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  height: 100%;
+  width: 100%;
+}
+
+.newNoteButton {
+  width: 15%;
+  background-color: #2F3D44;
+  border: 1px solid #91989C;
+  border-radius: 2px;
+  color: #F3F3F3;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.newNoteButton:hover{
+  background-color: #7F8A90;
+  border: 1px solid whitesmoke;
+}

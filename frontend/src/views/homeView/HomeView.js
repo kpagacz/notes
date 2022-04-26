@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
-import CodeInput from "components/CodeInput";
+import CodeInput from "components/codeInput/CodeInput";
+import style from "./HomeView.module.css";
 
 const HomeView = () => {
   var navigate = useNavigate();
@@ -14,7 +14,7 @@ const HomeView = () => {
   return (
     <div>
       <CodeInput />
-      <button onClick={handleNewNoteClick}>Create a New Note</button>
+      <button onClick={handleNewNoteClick} className={style.newNoteButton}>Create a New Note</button>
     </div>
   );
 };
