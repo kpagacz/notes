@@ -60,3 +60,10 @@ expiration date
 not fulfilling one of the business requirements because I don't like returning not tested code)
 * Poor or close to non-existant error handling
 * Poor user facing error messaging
+
+## New features:
+* Supporting some kind of flavour of markdown when showing the notes and writing them.
+* Possibility to edit an already existing note (including changes to its expiration).
+* Support filtering offensive content - since the content is held on the application's servers it might be advised to include
+some moderation for it - either on the level of frontend (calls to API with the contents) or from the backend (a reoccuring job filtering
+out offensive content).
