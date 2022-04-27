@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import HomeView from "views/homeView/HomeView";
-import NoteEditView from "views/NoteEditView";
-import NoteShowView from "views/NoteShowView";
-import Page404 from "views/Page404";
+import NoteEditView from "views/noteEditView/NoteEditView";
+import NoteShowView from "views/noteShowView/NoteShowView";
+import Page404 from "views/page404/Page404";
 
 function App() {
   return (

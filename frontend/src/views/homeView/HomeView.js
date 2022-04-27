@@ -12,7 +12,7 @@ const HomeView = () => {
   };
 
   return (
-    <div>
+    <div className={style.div}>
       <CodeInput />
       <button onClick={handleNewNoteClick} className={style.newNoteButton}>Create a New Note</button>
     </div>

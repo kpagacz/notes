@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import HomeButton from "components/HomeButton";
+import HomeButton from "components/homeButton/HomeButton";
 import { useParams } from "react-router-dom";
 import getNote from "httpLayer/getNote";
+import styles from "./NoteShowView.module.css";
 
 const NoteShowView = () => {
   const { id } = useParams();
@@ -25,12 +26,14 @@ const NoteShowView = () => {
   const statusSwitch = (statusCode) => {
     switch (statusCode) {
       case 200:
+        const date = new Date(note.expirationDate * 1000);
         return (
-          <div>
-            <p>ID: {id} </p>
-            <p>Content: {note.noteContent}</p>
-            <p>ExpirationData: {note.expirationDate}</p>
-            <p>CreatedBy: {note.createdBy}</p>
+          <div className={styles.noteShow}>
+            <p>Note says:</p>
+            <p>{note.noteContent}</p>
+            <p>Authored by: {note.createdBy}. Expires on {date.toUTCString()}</p>
+            <p>The secret of your note: {note.id}</p>
+            <p>You can use the secret to revisit your note and share it with others.</p>
           </div>
         );
       case 404:
@@ -41,7 +44,7 @@ const NoteShowView = () => {
   };
 
   return (
-    <div>
+    <div className={styles.noteShowWrapper}>
       <HomeButton />
       {statusSwitch(statusCode)}
     </div>

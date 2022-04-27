@@ -7,7 +7,7 @@ const HomeButton = () => {
   const handleClick = () => {
     navigate("/");
   };
-  return <button onClick={handleClick}>Home</button>;
+  return <button className="noteButton" onClick={handleClick}>Home</button>;
 };
 
 export default HomeButton;

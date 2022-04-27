@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Configuration
+This frontend application needs one step of manual configuration, which is specifying the base URL of the backend API. The frontend application
+works on its own, but it won't be able to connect to the backend service if the URL is wrong or missing and you might encounter errors because of it.
+
 ## Available Scripts
 
 In the project directory, you can run:

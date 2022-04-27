@@ -1,0 +1,56 @@
+.noteFormWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.noteForm {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  justify-content: center;
+  align-items: center;
+}
+
+.textarea {
+  display: block;
+  width: 100%;
+  border: 1px solid #2F3D44;
+  border-radius: 4px;
+  background-color: #1B2D36;
+  color: #F3F3F3;
+  margin: 4px;
+}
+
+.savingFailure {
+  color: red;
+}
+
+.savingSuccess {
+  color: green;
+}
+
+.datepicker {
+  background-color: #F3F3F3;
+  color: #2F3D44;
+}
+
+.submitNote {
+  align-self: flex-end;
+  padding: 0.3rem;
+}
+
+.authorInput {
+  width: 50%;
+  border: 1px solid #2F3D44;
+  border-radius: 4px;
+  background-color: #1B2D36;
+  color: #F3F3F3;
+  padding: 0.3rem;
+}
+
+.expirationLabel {
+  margin: 4px;
+}

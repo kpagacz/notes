@@ -2,6 +2,7 @@ import createNote from "httpLayer/postNotes";
 import React, { useState } from "react";
 import DateTimePicker from "react-datetime-picker";
 import { useNavigate } from "react-router-dom";
+import styles from "./NoteForm.module.css";
 
 const NoteForm = () => {
   const [expirationDate, setExpirationDate] = useState(new Date());
@@ -26,9 +27,8 @@ const NoteForm = () => {
           setSavingNoteStatus("savingSuccess");
           setTimeout(() => {
             navigate("/notes/" + response.data.id);
-          }, 2500);
-        }
-        else setSavingNoteStatus("savingFailure");
+          }, 5000);
+        } else setSavingNoteStatus("savingFailure");
       } catch (exception) {
         setSavingNoteStatus("savingFailure");
       }
@@ -36,22 +36,15 @@ const NoteForm = () => {
     getResponse();
   };
 
-  const [authorInputEmpty, setAuthorInputEmpty] = useState(true);
-  const [noteInputEmpty, setNoteInputEmpty] = useState(true);
-  const [submitButtonDisabled, setSubmitButtonDisables] = useState(true);
 
   const handleAuthorChange = (event) => {
     event.preventDefault();
     setCreatedBy(event.target.value);
-    setAuthorInputEmpty(event.target.value === "");
-    setSubmitButtonDisables(authorInputEmpty || noteInputEmpty);
   };
 
   const handleNoteChange = (event) => {
     event.preventDefault();
     setNoteContent(event.target.value);
-    setNoteInputEmpty(event.target.value === "");
-    setSubmitButtonDisables(authorInputEmpty || noteInputEmpty);
   };
 
   const informAboutSavingStatus = () => {
@@ -64,34 +57,45 @@ const NoteForm = () => {
         savingMessage = "Saving note failed. Try again later.";
         break;
       case "savingSuccess":
-        savingMessage = "Note saved successfully! You will be redirected to the note's page soon.";
+        savingMessage =
+          "Note saved successfully! You will be redirected to the note's page soon.";
         break;
       default:
         savingMessage = "";
         break;
     }
 
-    return (
-      <div className={"note-form__status--" + savingNoteStatus}>
-        {savingMessage}
-      </div>
-    );
+    return <div className={styles[savingNoteStatus]}>{savingMessage}</div>;
   };
 
   return (
-    <div>
-      <form className="note-form" onSubmit={handleSaveNote}>
+    <div className={styles.noteFormWrapper}>
+      <form onSubmit={handleSaveNote} className={styles.noteForm}>
         <textarea
-          rows="10"
-          columns="50"
           placeholder="Your new note..."
           onChange={handleNoteChange}
+          className={styles.textarea}
+          required
         />
-        <label>Expiration Date:</label>
-        <DateTimePicker onChange={setExpirationDate} value={expirationDate} />
-        <label htmlFor="created-by">Author:</label>
-        <input type="text" id="created-by" onChange={handleAuthorChange} />
-        <button disabled={submitButtonDisabled} type="submit">
+        <input
+          type="text"
+          id="created-by"
+          onChange={handleAuthorChange}
+          placeholder="Author..."
+          className={styles.authorInput}
+          required
+        />
+        <label className={styles.expirationLabel}>Expire On:</label>
+        <DateTimePicker
+          onChange={setExpirationDate}
+          value={expirationDate}
+          className={styles.datepicker}
+          placeholderText="Pick the expiration date..."
+        />
+        <button
+          className="noteButton"
+          type="submit"
+        >
           Save the note
         </button>
       </form>

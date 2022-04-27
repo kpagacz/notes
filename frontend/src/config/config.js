@@ -1,4 +1,4 @@
-const baseApiUrl = "https://txo8iq5dc4.execute-api.eu-central-1.amazonaws.com"
+const baseApiUrl = "" // Here goes the base Api URL of the backend service
 
 const config = {
   prod: {

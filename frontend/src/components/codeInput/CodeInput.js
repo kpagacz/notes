@@ -12,8 +12,15 @@ const CodeInput = () => {
 
   return (
     <form onSubmit={onSubmitHandler} className={style.inputForm}>
-      <input type="text" id="note-code" name="note-code" placeholder="Input a note's secret to read it... "/>
-      <input type="submit" value="Discover the Note" />
+      <input
+        type="text"
+        id="note-code"
+        name="note-code"
+        placeholder="Input a note's secret to read it... "
+        autoComplete="off"
+        className={style.codeInput}
+      />
+      <input type="submit" value="Discover the Note" className="noteButton" />
     </form>
   );
 };

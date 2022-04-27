@@ -12,11 +12,10 @@ body {
   padding: 0;
   width: 100vw;
   height: 100vh;
-  display: flex;
 }
 
 #root {
-  display: inherit;
+  display: flex;
   width: 100%;
   height: 100%;
 }
@@ -24,4 +23,23 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.noteButton {
+  background-color: #2F3D44;
+  border: 1px solid #91989C;
+  border-radius: 2px;
+  color: #F3F3F3;
+  transition: background-color 0.3s ease-in-out;
+  margin: 0.5rem;
+}
+
+.noteButton:hover {
+  background-color: #7F8A90;
+  border: 1px solid whitesmoke;
+}
+
+.noteButton:disabled {
+  background-color: #7F8A90;
+  border: 1px solid whitesmoke;
 }

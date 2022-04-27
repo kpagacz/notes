@@ -18,12 +18,16 @@ and other resources needed to provision the above.
 should be your Personal Access Token and `Repository` should be the URL to your fork of this repository.
 If you don't override `Repository`, Cloudformation will try to pull `kpagacz/notes` repository instead of your fork.
 If you don't provide `AccessToken`, Cloudformation won't be able to download the application from your fork due to the lack of
-permissions.
+permissions. You can do this via the `deploy.sh` script I have provided which accepts two arguments (first one being the Access Token,
+second one being the repository URL) or manually using AWS Console.
+2. The script outputs the base URL of the backend API which you need to input as a variable to the frontend configuration file (`../frontend/src/config/config.js`). You can take this URL from the output of the script or manually from AWS Console of API Gateway resource provisioned by the
+YAML file.
+2. Update the code of the backend lambda functions (see [backend README]("../backend/README.ms") for more information).
 3. Run the build for the main branch using AWS Amplify (via CLI or the AWS Console) because Cloudformation can only provision the resource.
 
 At this point your frontend should be up and running.
 
 # Architecture
-The below picture presents an overview of the provisioned AWS architecture.
+The below link to the pricture presenting an overview of the provisioned AWS architecture.
 
 [AWS architecture overview](aws-architecture.png)

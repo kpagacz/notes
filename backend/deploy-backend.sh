@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# A key-value dictionary of (directory)-(AWS Lambda function name) pairs
+# Two arrays of (directory)-(AWS Lambda function name) pairs
 endpoints=("postNote" "getNote")
 lambdaNames=("notesPostHandler" "notesGetHandler")
 
