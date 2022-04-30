@@ -22,7 +22,7 @@ permissions. You can do this via the `deploy.sh` script I have provided which ac
 second one being the repository URL) or manually using AWS Console.
 2. The script outputs the base URL of the backend API which you need to input as a variable to the frontend configuration file (`../frontend/src/config/config.js`). You can take this URL from the output of the script or manually from AWS Console of API Gateway resource provisioned by the
 YAML file.
-2. Update the code of the backend lambda functions (see [backend README]("../backend/README.ms") for more information).
+2. Update the code of the backend lambda functions (see [backend README](../backend/README.md) for more information).
 3. Run the build for the main branch using AWS Amplify (via CLI or the AWS Console) because Cloudformation can only provision the resource.
 
 At this point your frontend should be up and running.
