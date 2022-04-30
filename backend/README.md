@@ -5,7 +5,7 @@ The architecture of the backend is serverless. The application relies on a coupl
 The OpenAPI Specification of the backend lives in the `Notes-API.yaml` file.
 
 ## AWS Deployment
-The backend is serviced by AWS Lambda functions that need to be updated with the latest code from this repository after provisioning the AWS Lambda itself (see `cloudformation/README.md` for information about provisioning). This can be done in a number of ways, among them:
+The backend is serviced by AWS Lambda functions that need to be updated with the latest code from this repository after provisioning the AWS Lambda itself (see [`cloudformation/README.md`](../clouformation/README.md) for information about provisioning). This can be done in a number of ways, among them:
 * with a Github Action updating the code of AWS Lambdas on every push to the branch of this repository
 * manually with AWS CLI
 
@@ -15,7 +15,7 @@ I have prepared a short bash script updating the functions using AWS CLI for sim
 
 In summary, to deploy the backend you need to:
 1. Provision the resources using Cloudformation yamls in `/cloudformation` or by running the deployment script inside `/cloudformation`
-(see the [backend README]("../backend/README.md) for more information).
+(see the [cloudformation README](../cloudformation/README.md) for more information).
 2. Clone the repository locally.
 3. Install AWS CLI.
 4. Authenticate to AWS using AWS CLI.
